@@ -6,6 +6,10 @@ const { animals } = require('./data/animals.json');
 const PORT = process.env.PORT || 3001; 
 //11.1.4 - instantiate the server
 const app = express(); 
+//11.2.5 - parse incoming string or array data - middleware functions - must be set up everytime you create a server thats looking to accept post data
+app.use(express.urlencoded({ extended: true })); //takes incoming POST data and converts it to key/value pairings that can be accessed in the req.body
+// parse incoming JSON data - middleware functions
+app.use(express.json()); //takes incoming POST data in the form of JSON and parses it into the req.body
 
 
 //11.1.5 - filter functionality - will take in req.query as an argument and filter through animals, returning new filtered array
@@ -75,11 +79,11 @@ app.get('/api/animals/:id', (req, res) => {
 });
 
 //11.2.3 - app object - created route that listens for post request - client requesting server to accept data
-app.post('api/animals', (req,res) => {
-    //req.body is where our incoming content will be 
+app.post('/api/animals', (req, res) => {
+    // req.body is where our incoming content will be
     console.log(req.body);
-    res.json(req.body) // package up data and send to server - we can access req.body data and use it
-});
+    res.json(req.body);
+  });
 
 //11.1.4 - method to make server listen 
 app.listen(PORT, () => {
