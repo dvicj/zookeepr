@@ -10,6 +10,9 @@ const app = express();
 app.use(express.urlencoded({ extended: true })); //takes incoming POST data and converts it to key/value pairings that can be accessed in the req.body
 // parse incoming JSON data - middleware functions
 app.use(express.json()); //takes incoming POST data in the form of JSON and parses it into the req.body
+//11.3.4 - middleware that instructs the server to make certain files readily available and not gate it behind a server endpoint
+//provide a file path to a location (ie. public folder) and instructs server to make these files static resources
+app.use(express.static('public'));
 //11.2.6 - use fs library to write data to animals.json
 const fs = require('fs');
 const path = require('path');
@@ -123,6 +126,11 @@ app.post('/api/animals', (req, res) => {
     res.json(animal);
   }
 });
+
+//11.3.4 - getting index.html to be served from our express.js server - "/" points to the root route of the server 
+app.get('/', (req,res) => { //only job is to respond with an html page to display in the browser
+    res.sendFile(path.join(__dirname, './public/index.html'));
+}); 
 
 //11.1.4 - method to make server listen 
 app.listen(PORT, () => {
