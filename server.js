@@ -117,7 +117,7 @@ app.post('/api/animals', (req, res) => {
 
   // if any data in req.body is incorrect, send 400 error back
   if (!validateAnimal(req.body)) {
-    res.status(400).send('The animal is not properly formatted.');
+    res.status(400).send('The animal is not properly formatted.'); //11.2.6 - a response method to relay a message to the client making the request
   } else {
     const animal = createNewAnimal(req.body, animals);
     res.json(animal);
