@@ -30,6 +30,18 @@ const getAnimals = (formData = {}) => {
   });
 
   console.log(queryUrl);
+  //11.3.7
+  fetch(queryUrl)
+  .then(response => {
+    if (!response.ok) {
+      return alert('Error: ' + response.statusText);
+    }
+    return response.json();
+  })
+  .then(animalData => {
+    console.log(animalData);
+    printResults(animalData);
+  });
 
 };
 
