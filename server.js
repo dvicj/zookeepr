@@ -132,6 +132,15 @@ app.get('/', (req,res) => { //only job is to respond with an html page to displa
     res.sendFile(path.join(__dirname, './public/index.html'));
 }); 
 
+//11.3.6 
+app.get('/animals', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/animals.html'));
+});
+
+app.get('/zookeepers', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+});
+
 //11.1.4 - method to make server listen 
 app.listen(PORT, () => {
     console.log(`API server now on port ${PORT}!`);
