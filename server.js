@@ -1,5 +1,7 @@
 //11.1.4 
 const express = require('express');
+//11.1.6 - use 3001, if not default to port 80
+const PORT = process.env.PORT || 3001; 
 //11.1.4 - instantiate the server
 const app = express(); 
 //11.1.5 - route the front-end can request data from 
@@ -55,6 +57,6 @@ app.get('/api/animals', (req,res) => {
     res.json(results); //11.1.5 - edited - to send JSON
 });
 //11.1.4 - method to make server listen 
-app.listen(3001, () => {
-    console.log(`API server now on port 3001!`);
+app.listen(PORT, () => {
+    console.log(`API server now on port ${PORT}!`);
 }); 
