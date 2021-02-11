@@ -10,6 +10,9 @@ const app = express();
 app.use(express.urlencoded({ extended: true })); //takes incoming POST data and converts it to key/value pairings that can be accessed in the req.body
 // parse incoming JSON data - middleware functions
 app.use(express.json()); //takes incoming POST data in the form of JSON and parses it into the req.body
+//11.2.6 - use fs library to write data to animals.json
+const fs = require('fs');
+const path = require('path');
 
 
 //11.1.5 - filter functionality - will take in req.query as an argument and filter through animals, returning new filtered array
@@ -57,6 +60,35 @@ function findById(id, animalsArray) {
     return result;
 };
 
+//11.2.6 - handle taking data from req.body and adding it to animals.json file
+function createNewAnimal(body, animalsArray) { //accepts the POST routes req.body value and the array we want to add the data to
+    const animal = body; 
+    animalsArray.push(animal);
+    //11.2.6 
+    fs.writeFileSync(
+        path.join(__dirname, './data/animals.json'),
+        JSON.stringify({ animals: animalsArray }, null, 2) //11.2.6 - save the data as JSON - null means we dont want to edit any of our existing data - 2 means we want to create white space between our values to make it more readable
+    );
+    //return finished code to post route for response
+    return animal; 
+};
+
+function validateAnimal(animal) {
+    if (!animal.name || typeof animal.name !== 'string') {
+      return false;
+    }
+    if (!animal.species || typeof animal.species !== 'string') {
+      return false;
+    }
+    if (!animal.diet || typeof animal.diet !== 'string') {
+      return false;
+    }
+    if (!animal.personalityTraits || !Array.isArray(animal.personalityTraits)) {
+      return false;
+    }
+    return true;
+};
+
 //11.1.5 - get() requires two arguments - first is a string that describes the route the client will have to fetch from
 //second is a callback function that will execute everytime that route is accesed with a get request 
 // send() method from the res(response) parameter to send string to client 
@@ -80,10 +112,17 @@ app.get('/api/animals/:id', (req, res) => {
 
 //11.2.3 - app object - created route that listens for post request - client requesting server to accept data
 app.post('/api/animals', (req, res) => {
-    // req.body is where our incoming content will be
-    console.log(req.body);
-    res.json(req.body);
-  });
+    //set id based on what the nest index of the array will be
+    req.body.id = animals.length.toString(); 
+
+  // if any data in req.body is incorrect, send 400 error back
+  if (!validateAnimal(req.body)) {
+    res.status(400).send('The animal is not properly formatted.');
+  } else {
+    const animal = createNewAnimal(req.body, animals);
+    res.json(animal);
+  }
+});
 
 //11.1.4 - method to make server listen 
 app.listen(PORT, () => {
