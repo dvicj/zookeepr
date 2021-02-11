@@ -73,6 +73,14 @@ app.get('/api/animals/:id', (req, res) => {
       res.send(404);
     }
 });
+
+//11.2.3 - app object - created route that listens for post request - client requesting server to accept data
+app.post('api/animals', (req,res) => {
+    //req.body is where our incoming content will be 
+    console.log(req.body);
+    res.json(req.body) // package up data and send to server - we can access req.body data and use it
+});
+
 //11.1.4 - method to make server listen 
 app.listen(PORT, () => {
     console.log(`API server now on port ${PORT}!`);
