@@ -1,11 +1,12 @@
 //11.1.4 
 const express = require('express');
+//11.1.5 - route the front-end can request data from 
+const { animals } = require('./data/animals.json');
 //11.1.6 - use 3001, if not default to port 80
 const PORT = process.env.PORT || 3001; 
 //11.1.4 - instantiate the server
 const app = express(); 
-//11.1.5 - route the front-end can request data from 
-const { animals } = require('./data/animals.json');
+
 
 //11.1.5 - filter functionality - will take in req.query as an argument and filter through animals, returning new filtered array
 function filterByQuery(query, animalsArray) {
@@ -32,7 +33,7 @@ function filterByQuery(query, animalsArray) {
             filteredResults = filteredResults.filter(
                 animal => animal.personalityTraits.indexOf(trait) !== -1
             );
-            });
+        });
     } 
     if(query.diet) {
         filteredResults = filteredResults.filter(animal => animal.diet === query.diet);
@@ -44,7 +45,13 @@ function filterByQuery(query, animalsArray) {
         filteredResults = filteredResults.filter(animal => animal.name === query.name);
     }
     return filteredResults; 
-}
+};
+
+//11.1.7 - takes in the id and the array of animals and returns a single animal object
+function findById(id, animalsArray) {
+    const result = animalsArray.filter(animal => animal.id === id)[0];
+    return result;
+};
 
 //11.1.5 - get() requires two arguments - first is a string that describes the route the client will have to fetch from
 //second is a callback function that will execute everytime that route is accesed with a get request 
@@ -55,6 +62,16 @@ app.get('/api/animals', (req,res) => {
         results = filterByQuery(req.query, results)
     }
     res.json(results); //11.1.5 - edited - to send JSON
+});
+
+//11.1.7 - param route must come after the other GET route 
+app.get('/api/animals/:id', (req, res) => {
+    const result = findById(req.params.id, animals);
+    if (result) {
+      res.json(result);
+    } else {
+      res.send(404);
+    }
 });
 //11.1.4 - method to make server listen 
 app.listen(PORT, () => {
